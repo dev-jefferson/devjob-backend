@@ -3,7 +3,10 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -48,8 +51,41 @@ class Handler extends ExceptionHandler
      *
      * @throws \Exception
      */
-    public function render($request, Exception $exception)
+    public function render($request, Exception $e)
     {
-        return parent::render($request, $exception);
+
+        if ($e instanceof UnauthorizedHttpException) {
+            return response()->json(['error' => $e->getMessage()], $e->getStatusCode());
+
+        } else if ($e instanceof Tymon\JWTAuth\Exceptions\TokenInvalidException) {
+            return response()->json(['error' => 'token_invalid'], $e->getStatusCode());
+
+        } else if ($e instanceof Tymon\JWTAuth\Exceptions\TokenBlacklistedException) {
+            return response()->json(['error' => 'token_blacklisted'], $e->getStatusCode());
+
+        } else if ($e instanceof Tymon\JWTAuth\Exceptions\TokenExpiredException) {
+            return response()->json(['error' => 'token_expired'], $e->getStatusCode());
+        }else {
+
+            if(!empty($e->validator)){
+                return parent::render($request, $e);
+            }
+            if($e instanceof ModelNotFoundException ){
+
+                return parent::render($request, $e);
+            }
+            return parent::render($request, $e);
+
+            return response()->json($e, 400);
+
+
+        }
+
     }
 }
+
+
+// return $request->expectsJson()
+//     ? response()->json(['message' => $e->getMessage()], 404)
+//     : redirect()->guest(route('api.index'));
+// dd($e);

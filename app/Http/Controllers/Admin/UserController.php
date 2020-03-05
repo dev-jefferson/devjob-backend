@@ -3,63 +3,74 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserValidation;
 use App\models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        return response()->json(User::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(UserValidation $request)
     {
-        //
+        $request->validated();
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->username = $request->username;
+        $user->password = bcrypt($request->password);
+        $user->contacts = $request->contacts;
+        $user->addresses = $request->addresses;
+        $user->linkedin = $request->linkedin;
+        $user->git = $request->git;
+        $user->save();
+
+        return response()->json([
+            'success' => 'Usuário criado com sucesso!',
+            'data' => $user,
+        ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
+
+
+    public function show($id)
     {
-        //
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['error' => 'Usuário não encontrado!'], 404);
+        }
+        return response()->json($user);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, User $user)
+
+
+    public function update(UserValidation $request, User $user)
     {
-        //
+
+        $request->validated();
+
+        $user->update($request->all());
+
+        return response()->json([
+            'success' => 'Usuário alterado com sucesso!',
+            'data' => $user,
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
+
+
+    public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['error' => 'Usuário não encontrado!'], 404);
+        }
+        $user->delete();
+
+        return response()->json(['success' => 'Usuário removido com sucesso!'], 200);
     }
 }
