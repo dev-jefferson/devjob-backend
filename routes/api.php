@@ -30,5 +30,6 @@ Route::prefix('auth')->namespace('Auth')->group(function () {
 
 Route::prefix('admin')->middleware('jwt.auth')->namespace('Admin')->group(function () {
     Route::resource('users', 'UserController');
+    Route::resource('jobs', 'JobController');
 });
 

@@ -22,6 +22,7 @@ class CreateFilesTable extends Migration
             $table->string('extension', 20);
             $table->string('path',155);
             $table->string('disk', 20);
+            $table->morphs('fileable');
             $table->timestamps();
         });
     }

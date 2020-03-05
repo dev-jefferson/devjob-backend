@@ -21,8 +21,8 @@ class CreateCandidatesTable extends Migration
 
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->unsignedBigInteger('curriculum_id')->nullable();
-            $table->foreign('curriculum_id')->references('id')->on('files');
+            // $table->unsignedBigInteger('curriculum_id')->nullable();
+            // $table->foreign('curriculum_id')->references('id')->on('files');
             $table->timestamps();
         });
     }
