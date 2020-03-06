@@ -24,11 +24,11 @@ class CreateUsersTable extends Migration
             $table->string('linkedin', 155)->nullable();
             $table->string('git', 155)->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->unsignedBigInteger('avatar_id')->nullable();
             $table->boolean('is_active')->default(false);
             $table->rememberToken();
             $table->timestamps();
-            $table->foreign('avatar_id')->references('id')->on('files');
+            // $table->unsignedBigInteger('avatar_id')->nullable();
+            // $table->foreign('avatar_id')->references('id')->on('files');
         });
     }
 

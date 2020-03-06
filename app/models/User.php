@@ -69,9 +69,14 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    // public function avatar()
+    // {
+    //   return $this->belongsTo('App\models\File', 'avatar_id', 'id');
+    // }
+
     public function avatar()
     {
-      return $this->belongsTo('App\models\File', 'avatar_id', 'id');
+      return $this->morphOne(File::class , 'fileable');
     }
 
 }

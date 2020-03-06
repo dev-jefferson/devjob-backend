@@ -30,5 +30,14 @@ Route::prefix('auth')->namespace('Auth')->group(function () {
 
 Route::prefix('admin')->middleware('jwt.auth')->namespace('Admin')->group(function () {
     Route::resource('users', 'UserController');
+    Route::resource('jobs', 'JobController');
 });
 
+Route::namespace('Client')->group(function () {
+
+    Route::middleware('jwt.auth')->group(function () {
+        Route::get('profile', 'ProfileController@show')->name('profile.show');
+        Route::get('profile/avatar', 'ProfileController@getAvatar')->name('profile.getAvatar');
+        Route::post('profile', 'ProfileController@store')->name('profile.store');
+    });
+});
