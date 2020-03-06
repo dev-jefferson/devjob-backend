@@ -65,7 +65,7 @@ class Handler extends ExceptionHandler
 
         } else if ($e instanceof Tymon\JWTAuth\Exceptions\TokenExpiredException) {
             return response()->json(['error' => 'token_expired'], $e->getStatusCode());
-        }else {
+        }else { //"Illuminate\\Contracts\\Filesystem\\FileNotFoundException"
 
             if(!empty($e->validator)){
                 return parent::render($request, $e);
